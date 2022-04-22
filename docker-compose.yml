@@ -1,0 +1,87 @@
+version: '3.7'
+
+services:
+
+    nginx:
+      image: nginx:alpine
+      container_name: nginx
+      ports:
+        - "80:80"
+      volumes:
+        - type: bind
+          source: ./nginx.conf
+          target: /etc/nginx/conf.d/default.conf
+        - type: bind
+          source: ./nginx/
+          target: /usr/share/nginx/html
+      networks:
+        - nginx-net
+      restart: on-failure
+
+
+    jenkins:
+        image: jenkins/jenkins:alpine
+        container_name: jenkins
+        networks:
+          - nginx-net
+        volumes:
+          - jenkins-log:/var/log/jenkins
+          - jenkins-data:/var/jenkins_home
+        environment:
+          - JENKINS_OPTS="--prefix=/jenkins"
+        restart: on-failure
+
+
+    flask:
+      image: flask  # tak będzie się nazywać obraz, który zbuduje się z "build:"
+      container_name: flask  # tak będzie się nazywać kontener, --name flask
+      build: # ścieżka do Dockerfile z którego ma być zbudowany image
+        context: ./flask
+      ports:
+        - 5001:5001
+      volumes:
+        - type: bind
+          source: ./flask/app/
+          target: /app
+      networks:
+        - nginx-net
+      restart: on-failure
+
+
+    postgres:
+      image: postgres
+      container_name: postgres
+      ports:
+        - '5438:5432'
+      networks:
+        - nginx-net
+      volumes:
+        - postgres:/data/postgres
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=postgres
+        - POSTGRES_DATA=/var/lib/postgresql/data/pgdata
+      restart: unless-stopped
+
+
+    scrapy:
+      image: nginx_compose/scrapy
+      container_name: scrapy
+      volumes:
+        - type: bind
+          source: ./scrapy_postgres/zabbix_hosts/hostspider/
+          target: /app/zabbix_hosts/hostspider/
+      networks:
+        - nginx-net
+      restart: unless-stopped
+      tty: true
+
+
+networks:
+  nginx-net:
+
+volumes:
+  jenkins-log:
+  jenkins-data:
+  postgres:
