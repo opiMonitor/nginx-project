@@ -19,7 +19,6 @@ job('website-monitor') {
 
   steps {
     environmentVariables {
-      env('WEBSITE', websie)
       env('TIMEOUT', 5)
       env('ATTEMPTS', 5)
     }
