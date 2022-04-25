@@ -1,4 +1,4 @@
-def recipients = 'pawel.borowski@opi.org.pl pborowskiopi@gmail.com'
+def recipients = 'pawel.borowski@opi.org.pl'
 def website = 'https://intranet.opi.org.pl'
 
 //Optional pre-send script, see further in this article for more info.
