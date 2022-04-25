@@ -24,7 +24,7 @@ job('website-monitor') {
     }
 
     //Run a shell script from the workspace
-    shell(readFileFromWorkspace('web30.sh'))
+    shell(readFileFromWorkspace('job-dsl/web30.sh'))
   }
 
   logRotator {
