@@ -49,10 +49,7 @@ job('website-monitor') {
                     subject('Subject website offline!')
                     content('Body')
                     sendTo {
-                        developers()
-                        requester()
-                        culprits()
-                        recipientList()
+                        recipientList('pawel.borowski@opi.org.pl')
                     }
                 }
             }
