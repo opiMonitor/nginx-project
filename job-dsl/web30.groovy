@@ -32,11 +32,16 @@ job('website-monitor') {
   }
 
   publishers {
-    extendedEmail('pawel.borowski@opi.org.pl', 'Website is offline') {
+    extendedEmail {
 
-      //Events on which a email is sent
-      trigger(triggerName: 'Failure', subject: 'Website offline!', body: 'Website ' + website + ' is offline!')
-      trigger(triggerName: 'Fixed', subject: 'Website online!', body: 'Website ' + website + ' is back online!')
+        recipientList('pawel.borowski@opi.org.pl')
+        defaultSubject('Oops')
+        defaultContent('Something broken')
+        contentType('text/html')
+
+        //Events on which a email is sent
+        trigger(triggerName: 'Failure', subject: 'Website offline!', body: 'Website ' + website + ' is offline!')
+        trigger(triggerName: 'Fixed', subject: 'Website online!', body: 'Website ' + website + ' is back online!')
 
     }
   }
