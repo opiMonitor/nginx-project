@@ -4,7 +4,7 @@ def website = 'https://intranet.opi.org.pl'
 //Optional pre-send script, see further in this article for more info.
 //If removed, make sure to also remove the 'presendScript' variable
 //in the publisher block below.
-def localPreSendScript = readFileFromWorkspace('<path to script>/pre_send_script.groovy_script')
+ //def localPreSendScript = readFileFromWorkspace('<path to script>/pre_send_script.groovy_script')
 
 //Job identifier, also used for the directory
 job('website-monitor') {
@@ -25,7 +25,7 @@ job('website-monitor') {
     }
 
     //Run a shell script from the workspace
-    shell(readFileFromWorkspace('<path to your shell script>/check_status_code.sh'))
+    shell(readFileFromWorkspace('web30.sh'))
   }
 
   logRotator {
@@ -47,7 +47,7 @@ job('website-monitor') {
           //Make sure that recipients mail to each other and not back to the system
           replyTo recipients
           //Optional script for extra conditions
-          presendScript localPreSendScript
+          // presendScript localPreSendScript
         }
       }
     }
