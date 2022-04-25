@@ -45,15 +45,15 @@ job('website-monitor') {
 
         triggers {
                 failure {
-                    subject('Subject website offline!')
-                    content('website'+ website + 'is offline!')
+                    subject('DSL Task website offline!')
+                    content('website '+ website + ' is offline!')
                     sendTo {
                         recipientList('pawel.borowski@opi.org.pl')
                     }
                 }
                 fixed {
-                    subject('Subject website fixed!')
-                    content('website'+ website + 'is fixed!')
+                    subject('DSL Task website fixed!')
+                    content('website '+ website + ' is fixed!')
                     sendTo {
                         recipientList('pawel.borowski@opi.org.pl')
                     }
