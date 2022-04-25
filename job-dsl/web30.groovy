@@ -1,4 +1,3 @@
-def recipients = 'pawel.borowski@opi.org.pl'
 def website = 'https://intranet.opi.org.pl'
 
 //Optional pre-send script, see further in this article for more info.
@@ -33,22 +32,12 @@ job('website-monitor') {
   }
 
   publishers {
-    extendedEmail(recipients, 'Website is offline') {
+    extendedEmail('pawel.borowski@opi.org.pl', 'Website is offline') {
 
       //Events on which a email is sent
       trigger(triggerName: 'Failure', subject: 'Website offline!', body: 'Website ' + website + ' is offline!')
       trigger(triggerName: 'Fixed', subject: 'Website online!', body: 'Website ' + website + ' is back online!')
 
-      //Custom configuration
-      configure { node ->
-        node << {
-          contentType 'text/html'
-          //Make sure that recipients mail to each other and not back to the system
-          replyTo recipients
-          //Optional script for extra conditions
-          // presendScript localPreSendScript
-        }
-      }
     }
   }
 }
