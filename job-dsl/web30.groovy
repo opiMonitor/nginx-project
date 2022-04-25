@@ -9,7 +9,7 @@ def website = '10.10.33.5/flask'
 job('website-monitor') {
 
   //Name of the job in Jenkins
-  displayName('Website status of ExampleWebsite')
+  displayName('Website status of flask container')
 
   triggers {
       //Run every 5 minutes
