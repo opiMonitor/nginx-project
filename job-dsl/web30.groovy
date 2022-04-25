@@ -40,8 +40,23 @@ job('website-monitor') {
         contentType('text/html')
 
         //Events on which a email is sent
-        trigger(triggerName: 'Failure', subject: 'Website offline!', body: 'Website ' + website + ' is offline!')
-        trigger(triggerName: 'Fixed', subject: 'Website online!', body: 'Website ' + website + ' is back online!')
+        //trigger(triggerName: 'Failure', subject: 'Website offline!', body: 'Website ' + website + ' is offline!')
+        //trigger(triggerName: 'Fixed', subject: 'Website online!', body: 'Website ' + website + ' is back online!')
+
+        triggers {
+                beforeBuild()
+                stillUnstable {
+                    subject('Subject website offline!')
+                    content('Body')
+                    sendTo {
+                        developers()
+                        requester()
+                        culprits()
+                        recipientList()
+                    }
+                }
+            }
+
 
     }
   }
