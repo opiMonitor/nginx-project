@@ -11,4 +11,4 @@ A brief description of what this project does and who it's for
 
 - [x] jenkins 'every 30 minutes' job to check website accessibility // done 25/04
 
-- [] more integrations
+- [ ] more integrations
