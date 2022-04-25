@@ -44,10 +44,16 @@ job('website-monitor') {
         //trigger(triggerName: 'Fixed', subject: 'Website online!', body: 'Website ' + website + ' is back online!')
 
         triggers {
-                beforeBuild()
-                stillUnstable {
+                failure {
                     subject('Subject website offline!')
-                    content('Body')
+                    content('website'+ website + 'is offline!')
+                    sendTo {
+                        recipientList('pawel.borowski@opi.org.pl')
+                    }
+                }
+                fixed {
+                    subject('Subject website fixed!')
+                    content('website'+ website + 'is fixed!')
                     sendTo {
                         recipientList('pawel.borowski@opi.org.pl')
                     }
