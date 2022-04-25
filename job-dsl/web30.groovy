@@ -1,4 +1,4 @@
-def website = 'https://intranet.opi.org.pl'
+def website = '10.10.33.5/flask'
 
 //Optional pre-send script, see further in this article for more info.
 //If removed, make sure to also remove the 'presendScript' variable

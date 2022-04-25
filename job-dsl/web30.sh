@@ -1,14 +1,14 @@
 #!/bin/bash
-url='https://intranet.opi.org.pl'
-attempts=5
-timeout=5
+url='10.10.33.5/flask'
+attempts=2
+timeout=2
 online=false
 
 echo "Checking status of $url."
 
 for (( i=1; i<=$attempts; i++ ))
 do
-  code=`curl -sL --connect-timeout 20 --max-time 30 -w "%{http_code}\\n" "$url" -o /dev/null`
+  code=`curl -sL --connect-timeout 2 --max-time 3 -w "%{http_code}\\n" "$url" -o /dev/null`
 
   echo "Found code $code for $url."
 
