@@ -22,7 +22,7 @@ sql.close()
 //in the publisher block below.
 //def localPreSendScript = readFileFromWorkspace('<path to script>/pre_send_script.groovy_script')
 
-for ( i in 0..9 ) {
+for ( i in 0..2 ) {
     //Job identifier, also used for the directory
     job('test/website-monitors-test'+i) {
 
