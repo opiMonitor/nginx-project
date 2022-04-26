@@ -10,5 +10,5 @@ A brief description of what this project does and who it's for
 ## Roadmap
 
 - [x] jenkins 'every 30 minutes' job to check website accessibility // done 25/04
-
+- [ ] jenkins 'every 30 minutes' job for every zabbix monitored website
 - [ ] more integrations
