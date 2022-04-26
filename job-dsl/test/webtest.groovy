@@ -5,7 +5,7 @@ import groovy.sql.Sql
 def url = 'jdbc:postgresql://postgres:5432/postgres'
 def user = 'postgres'
 def password = 'postgres'
-def driver = '"org.postgresql.Driver'
+def driver = 'org.postgresql.Driver'
 def sql = Sql.newInstance(url, user, password, driver)
 
 def first = sql.firstRow('SELECT ip FROM host')
