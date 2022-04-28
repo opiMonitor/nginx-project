@@ -1,71 +1,80 @@
 from pprint import pprint
 from pyzabbix.api import ZabbixAPI
 import psycopg2
+from psycopg2 import sql
+from psycopg2.extensions import register_adapter
+from psycopg2.extras import Json
+from sqlalchemy import create_engine, Table, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-# Create ZabbixAPI class instance
-zapi = ZabbixAPI(url='http://10.20.50.57/zabbix/', user='tv-monitor', password='monitor1')
-
-web_links = zapi.do_request('trigger.get',
-                            {
-                                'filter': {'hostid': 11195,
-                                           'status': 0},
-                                'output': ['description']
-                            })
-
-for resulten in web_links['result']:
-    print(resulten['description'])
+engine = create_engine('postgresql://postgres:postgres@postgres:5432/postgres')
+Base = declarative_base()
 
 
-zapi.user.logout()
+class Url(Base):
+    __tablename__ = 'url'
+    id = Column(Integer, primary_key=True)
+    url = Column(String)
+
+    def __repr__(self):
+        return "<Url(id='{}', url='{}')>".format(self.id, self.url)
 
 
 def connect():
-    """ Connect to the PostgreSQL database server """
-    conn = None
 
-    # postgresql://username:password@host:port/database
-    # 'postgresql://postgres:postgres@postgres:5432/postgres',
+    # Create ZabbixAPI class instance
+    zapi = ZabbixAPI(url='http://10.20.50.57/zabbix/', user='tv-monitor', password='monitor1')
+
+    web_links = zapi.do_request('trigger.get',
+                                {
+                                    'filter': {'hostid': 11195,
+                                               'status': 0},
+                                    'output': ['description']
+                                })
+    # convert to list
+    web_links_list = []
+    for web in web_links['result']:
+        web_links_list.append(web['description'])
+
+    # print OK
+    print('\033[1;32m [OK] API GET 200!' + '\x1b[0m')
+
+    # API logout
+    zapi.user.logout()
 
     try:
-        print('\nx) Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(
-            host="postgres",
-            dbname="postgres",
-            user="postgres",
-            password="postgres")
+        Base.metadata.create_all(engine)
+        Session = sessionmaker(bind=engine)
+        s = Session()
 
-        cur = conn.cursor()
-        print('\033[1;32m [OK] Connected!' + '\x1b[0m')
+        for link in web_links_list:
+            data_url = Url(url=link)
+            host_exist = s.query(Url).filter_by(url=data_url.url).first()
+            if host_exist is None:  # if the current host do not exists do this:
+                try:
+                    s.add(data_url)
+                    s.commit()
+                    print(
+                        f"\033[1;32m [OK] NEW URL ADDED: ' + '\x1b[0m: id({data_url.id}), url: {data_url.url}")
 
-        # execute a statement
-        print('PostgreSQL database version:')
-        cur.execute('SELECT version()')
-        # display the PostgreSQL database server version
-        db_version = cur.fetchone()
-        print(db_version)
+                except:
+                    s.rollback()
+                    print(f"exception: {data_url.id} and url: {data_url.url}")
+                    raise
 
-        cur.close()
+                finally:
+                    print(f"finally: {data_url.id} and url: {data_url.url}")
 
-    except (Exception, psycopg2.DatabaseError) as error:
+        s.close()
+
+    except (Exception) as error:
+        print('\033[95m add web scenarios to database ERROR:' + '\x1b[0m')
         print(error)
 
     finally:
-        if conn is not None:
-            conn.close()
-            print('Database connection closed.')
-
-
-def create_tables():
-    """ create tables in the PostgreSQL database"""
-    commands = (
-        """
-        CREATE TABLE web_links (
-            link_id SERIAL PRIMARY KEY,
-            vendor_name VARCHAR(255) NOT NULL
-        )
-        """)
+        s.close()
 
 
 if __name__ == '__main__':
     connect()
-    print('koniec programu :)')
