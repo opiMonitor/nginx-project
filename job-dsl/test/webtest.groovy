@@ -1,6 +1,6 @@
 def website = '10.10.33.5/flask'
-def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
-echo response
+//def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
+//echo response
 
 
 import groovy.sql.Sql
