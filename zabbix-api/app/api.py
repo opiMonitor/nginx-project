@@ -47,6 +47,7 @@ def connect():
         Base.metadata.create_all(engine)
         Session = sessionmaker(bind=engine)
         s = Session()
+        rows = s.query(Url).count()
 
         for link in web_links_list:
             data_url = Url(url=link)
@@ -66,6 +67,8 @@ def connect():
                 finally:
                     print(f"finally: {data_url.id} and url: {data_url.url}")
 
+        rows2 = s.query(Url).count()
+        print(f" ADDED: {rows2-rows} ROWS")
         s.close()
 
     except (Exception) as error:
