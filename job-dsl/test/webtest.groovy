@@ -1,4 +1,7 @@
 def website = '10.10.33.5/flask'
+def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
+echo response
+
 
 import groovy.sql.Sql
 // postgresql://postgres:postgres@postgres:5432/postgres
@@ -8,7 +11,7 @@ def password = 'postgres'
 def driver = 'org.postgresql.Driver'
 def sql = Sql.newInstance(url, user, password, driver)
 
-def first = sql.firstRow('SELECT ip FROM host')
+def first = sql.firstRow('SELECT url FROM url')
 echo first
 
 
