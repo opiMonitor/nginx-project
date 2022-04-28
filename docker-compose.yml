@@ -25,6 +25,9 @@ services:
         networks:
           - nginx-net
         volumes:
+          - type: bind
+            source: ./flask/java
+            target: /usr/local/
           - jenkins-log:/var/log/jenkins
           - jenkins-data:/var/jenkins_home
         environment:
@@ -91,7 +94,7 @@ services:
         - nginx-net
       command: tail -F /dev/null
       restart: on-failure
-      
+
 
 
 networks:

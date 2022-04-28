@@ -2,19 +2,44 @@ def website = '10.10.33.5/flask'
 //def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
 //echo response
 
-@GrabConfig(systemClassLoader=true)
-@Grab(group='org.postgresql', module='postgresql', version='9.4-1205-jdbc42')
+
 
 import groovy.sql.Sql
-// postgresql://postgres:postgres@postgres:5432/postgres
-def url = 'jdbc:postgresql://postgres:5432/postgres'
-def user = 'postgres'
-def password = 'postgres'
-def driver = 'org.postgresql.Driver'
-def sql = Sql.newInstance(url, user, password, driver)
+import java.sql.Driver
 
-def first = sql.firstRow('SELECT url FROM url')
-echo first
+def driver = Class.forName('org.postgresql.Driver').newInstance() as Driver
+
+def props = new Properties()
+props.setProperty("user", "postgres")
+props.setProperty("password", "postgres")
+
+def conn = driver.connect("jdbc:postgresql://postgres:5432/postgres", props)
+def sql = new Sql(conn)
+
+try {
+    sql.eachRow("select count(*) from url") {
+        log.debug(it)
+    }
+} finally {
+    sql.close()
+    conn.close()
+}
+
+
+
+
+
+
+// import groovy.sql.Sql
+// postgresql://postgres:postgres@postgres:5432/postgres
+// def url = 'jdbc:postgresql://postgres:5432/postgres'
+// def user = 'postgres'
+// def password = 'postgres'
+// def driver = 'org.postgresql.Driver'
+// def sql = Sql.newInstance(url, user, password, driver)
+//
+// def first = sql.firstRow('SELECT url FROM url')
+// echo first
 
 
 // use 'sql' instance ...
