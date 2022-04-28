@@ -45,17 +45,31 @@ class HostsModels(db.Model):
         return f"Object HostsModels - NAME:{self.host}; IP: {self.ip}; LP: {self.id}"
 
 
+class UrlModels(db.Model):
+    __tablename__ = 'url'
+
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.UnicodeText())
+
+    def __init__(self, id, url):
+        self.id = id
+        self.url = url
+
+    def __repr__(self):
+        return f"Object UrlModels - URL: {self.url}; ID: {self.id}"
+
+
+# API
 resource_fields = {
     'id': fields.Integer,
     'host': fields.String,
     'ip': fields.String,
     'date': fields.String,
 }
-
-
-class HelloWorld(Resource):
-    def get(self):
-        return {"data": "Hello World"}
+url_fields = {
+    'id': fields.Integer,
+    'url': fields.String,
+}
 
 
 class HostList(Resource):
@@ -65,8 +79,15 @@ class HostList(Resource):
         return data
 
 
-api.add_resource(HelloWorld, "/hello")
+class UrlList(Resource):
+    @marshal_with(url_fields)
+    def get(self):
+        data = UrlModels.query.all()
+        return data
+
+
 api.add_resource(HostList, "/list")
+api.add_resource(UrlList, "/urls")
 
 
 @app.route('/')
