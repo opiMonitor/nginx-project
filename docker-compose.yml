@@ -78,6 +78,22 @@ services:
       tty: true
 
 
+    zabbix-api:
+      image: zabbix-api  # tak będzie się nazywać obraz, który zbuduje się z "build:"
+      container_name: zabbix-api  # tak będzie się nazywać kontener, --name flask
+      build: # ścieżka do Dockerfile z którego ma być zbudowany image
+        context: ./zabbix-api
+      volumes:
+        - type: bind
+          source: ./zabbix-api/app/
+          target: /app
+      networks:
+        - nginx-net
+      command: tail -F /dev/null
+      restart: on-failure
+      
+
+
 networks:
   nginx-net:
 
