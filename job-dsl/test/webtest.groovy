@@ -2,6 +2,8 @@ def website = '10.10.33.5/flask'
 //def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
 //echo response
 
+@GrabConfig(systemClassLoader=true)
+@Grab(group='org.postgresql', module='postgresql', version='9.4-1205-jdbc42')
 
 import groovy.sql.Sql
 // postgresql://postgres:postgres@postgres:5432/postgres
