@@ -27,12 +27,12 @@ println System.getProperty("java.ext.dirs")
 // }
 
 
-String url = "jdbc:postgresql://postgres:5432/postgres";
-Properties props = new Properties();
-props.setProperty("user","postgres");
-props.setProperty("password","postgres");
-props.setProperty("ssl","true");
-Connection conn = DriverManager.getConnection(url, props);
+// String url = "jdbc:postgresql://postgres:5432/postgres";
+// Properties props = new Properties();
+// props.setProperty("user","postgres");
+// props.setProperty("password","postgres");
+// props.setProperty("ssl","true");
+// Connection conn = DriverManager.getConnection(url, props);
 
 
 
@@ -53,7 +53,7 @@ Connection conn = DriverManager.getConnection(url, props);
 
 // use 'sql' instance ...
 
-sql.close()
+// sql.close()
 
 
 //Optional pre-send script, see further in this article for more info.
@@ -61,7 +61,7 @@ sql.close()
 //in the publisher block below.
 //def localPreSendScript = readFileFromWorkspace('<path to script>/pre_send_script.groovy_script')
 
-for ( i in 0..2 ) {
+for ( i in 0..1 ) {
     //Job identifier, also used for the directory
     job('test/website-monitors-test'+i) {
 
