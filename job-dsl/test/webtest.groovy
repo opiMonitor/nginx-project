@@ -1,8 +1,8 @@
 def website = '10.10.33.5/flask'
-echo Hello
+println Hello
 println(System.getProperty("java.ext.dirs"))
 echo System.getProperty("java.ext.dirs")
-echo Hello2
+println Hello2
 //def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
 //echo response
 
