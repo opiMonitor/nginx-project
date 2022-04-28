@@ -4,6 +4,21 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2.extensions import register_adapter
 from psycopg2.extras import Json
+from sqlalchemy import create_engine, Table, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine('postgresql://postgres:postgres@postgres:5432/postgres')
+Base = declarative_base()
+
+
+class Url(Base):
+    __tablename__ = 'url'
+    id = Column(Integer, primary_key=True)
+    url = Column(String)
+
+    def __repr__(self):
+        return "<Url(id='{}', url='{}')>".format(self.id, self.url)
 
 
 def connect():
@@ -28,62 +43,37 @@ def connect():
     # API logout
     zapi.user.logout()
 
-    """ Connect to the PostgreSQL database server """
-    conn = None
-
     try:
-        print('\nx) Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(
-            host="postgres",
-            dbname="postgres",
-            user="postgres",
-            password="postgres")
+        Base.metadata.create_all(engine)
+        Session = sessionmaker(bind=engine)
+        s = Session()
 
-        cur = conn.cursor()
-        print('\033[1;32m [OK] Connected!' + '\x1b[0m')
+        for link in web_links_list:
+            data_url = Url(url=link)
+            host_exist = s.query(Url).filter_by(url=data_url.url).first()
+            if host_exist is None:  # if the current host do not exists do this:
+                try:
+                    s.add(data_url)
+                    s.commit()
+                    print(
+                        f"\033[1;32m [OK] NEW URL ADDED: ' + '\x1b[0m: id({data_url.id}), url: {data_url.url}")
 
-        # check if table exists / create table
-        table_name = 'web'
-        cur.execute("select * from information_schema.tables where table_name=%s", (table_name,))
-        if(bool(cur.rowcount)):
-            print(f'table_name "{table_name}" exists. aborting creation.')
-        else:
-            print(f'table_name "{table_name}" was not existed. creation...')
-            try:
-                cur.execute(sql.SQL("CREATE TABLE {table} ( \
-                            link_id SERIAL PRIMARY KEY, \
-                            url VARCHAR(255) NOT NULL \
-                            )").format(table=sql.Identifier(table_name)))
-                conn.commit()
-                print('\033[1;32m [NEW TABLE] table Created!' + '\x1b[0m')
-            except (Exception, psycopg2.DatabaseError) as error:
-                print('\033[95m check if table exists / create table ERROR:' + '\x1b[0m')
-                print(error)
+                except:
+                    s.rollback()
+                    print(f"exception: {data_url.id} and url: {data_url.url}")
+                    raise
 
-        # add web scenarios to database
-        try:
-            for link in web_links_list:
-                # cur.execute("INSERT INTO {table} (url) VALUES web=%s").format(table=sql.Identifier(table_name)), resulten)
-                cur.execute(sql.SQL("""INSERT INTO {table} (url) \
-                VALUES (%s);""").format(table=sql.Identifier(table_name)),
-                            [link])
+                finally:
+                    print(f"finally: {data_url.id} and url: {data_url.url}")
 
-            conn.commit()
-            print('\033[1;32m [OK] add web scenarios to database Created!' + '\x1b[0m')
-        except (Exception, psycopg2.DatabaseError) as error:
-            print('\033[95m add web scenarios to database ERROR:' + '\x1b[0m')
-            print(error)
+        s.close()
 
-        cur.close()
-
-    except (Exception, psycopg2.DatabaseError) as error:
-        print('\033[95m Connecting to the PostgreSQL database ERROR:' + '\x1b[0m')
+    except (Exception) as error:
+        print('\033[95m add web scenarios to database ERROR:' + '\x1b[0m')
         print(error)
 
     finally:
-        if conn is not None:
-            conn.close()
-            print('\n xxxxxxx Database connection closed xxxxxxx')
+        s.close()
 
 
 if __name__ == '__main__':
