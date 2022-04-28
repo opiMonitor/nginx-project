@@ -2,6 +2,7 @@ import random
 import json
 from flask import Flask, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api, Resource, fields, marshal_with
 
 
 class ReverseProxied(object):
@@ -15,6 +16,7 @@ class ReverseProxied(object):
 
 
 app = Flask(__name__)
+api = Api(app)
 app.wsgi_app = ReverseProxied(app.wsgi_app, script_name='/flask')
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@postgres:5432/postgres"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -41,6 +43,30 @@ class HostsModels(db.Model):
 
     def __repr__(self):
         return f"Object HostsModels - NAME:{self.host}; IP: {self.ip}; LP: {self.id}"
+
+
+resource_fields = {
+    'id': fields.Integer,
+    'host': fields.String,
+    'ip': fields.String,
+    'date': fields.String,
+}
+
+
+class HelloWorld(Resource):
+    def get(self):
+        return {"data": "Hello World"}
+
+
+class HostList(Resource):
+    @marshal_with(resource_fields)
+    def get(self):
+        data = HostsModels.query.all()
+        return data
+
+
+api.add_resource(HelloWorld, "/hello")
+api.add_resource(HostList, "/list")
 
 
 @app.route('/')
