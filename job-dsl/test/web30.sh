@@ -8,7 +8,7 @@ echo "Checking status of $url."
 
 for (( i=1; i<=$attempts; i++ ))
 do
-  code=`curl -sL --connect-timeout 2 --max-time 3 -w "%{http_code}\\n" "${URL}" -o /dev/null`
+  code=`curl -sL -o /dev/null -k --connect-timeout 2 --max-time 3 -w "%{http_code}\\n" "${URL}"`
 
   echo "Found code $code for ${URL}."
 
