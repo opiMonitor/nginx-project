@@ -1,5 +1,5 @@
 #!/bin/bash
-url='10.10.33.5/flask'
+url=$1
 attempts=2
 timeout=2
 online=false

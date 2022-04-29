@@ -1,43 +1,24 @@
 import groovy.json.JsonSlurper
 
 def website = '10.10.33.5/flask'
-println "Hello to the groovy"
+
 def postmanGet = new URL('http://10.10.33.5/flask/urls')
 def getConnection = postmanGet.openConnection()
-println getConnection.responseCode
+def response_code = getConnection.responseCode
 def urls = getConnection.inputStream.text
 def card = new JsonSlurper().parse(postmanGet)
-def single_url = card[1].values()[1]
-println single_url
+
+println "groovy project for job creation for every single monitored webpage, stright from zabbix API http://10.10.33.5/flask/urls"
+println "response code: " + response_code
 
 for (url in card) {
 
-    println url.values()[1]
-}
+    // println url.values()[1]
 
-
-
-println "-----------"
-println "end of header"
-//def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
-//echo response
-
-
-
-
-
-
-//Optional pre-send script, see further in this article for more info.
-//If removed, make sure to also remove the 'presendScript' variable
-//in the publisher block below.
-//def localPreSendScript = readFileFromWorkspace('<path to script>/pre_send_script.groovy_script')
-
-for ( i in 0..1 ) {
-    //Job identifier, also used for the directory
-    job('test/website-monitors-test'+i) {
+    job('test/website ' + url.values()[1]) {
 
       //Name of the job in Jenkins
-      displayName('Website status of multiple containers test'+i)
+      displayName('test' + url.values()[1])
 
       triggers {
           //Run every 30 minutes
@@ -51,7 +32,7 @@ for ( i in 0..1 ) {
         }
 
         //Run a shell script from the workspace
-        shell(readFileFromWorkspace('job-dsl/test/web30.sh'))
+        shell(readFileFromWorkspace('job-dsl/test/web30.sh ${url}'))
       }
 
       logRotator {
@@ -70,14 +51,14 @@ for ( i in 0..1 ) {
             triggers {
                     failure {
                         subject('DSL Task website offline!')
-                        content('website '+ website + ' is offline!')
+                        content('website '+ url.values()[1] + ' is offline!')
                         sendTo {
                             recipientList('pawel.borowski@opi.org.pl')
                         }
                     }
                     fixed {
                         subject('DSL Task website fixed!')
-                        content('website '+ website + ' is fixed!')
+                        content('website '+ url.values()[1] + ' is fixed!')
                         sendTo {
                             recipientList('pawel.borowski@opi.org.pl')
                         }
@@ -87,4 +68,5 @@ for ( i in 0..1 ) {
       }
     }
 
-}
+
+} // end for
