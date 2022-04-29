@@ -19,6 +19,7 @@ for (url in card) {
 
       //Name of the job in Jenkins
       displayName('test' + url.values()[1])
+      println "job for: " + url.values()[1]
 
       triggers {
           //Run every 30 minutes
@@ -32,7 +33,7 @@ for (url in card) {
         }
 
         //Run a shell script from the workspace
-        shell(readFileFromWorkspace('job-dsl/test/web30.sh ${url}'))
+        shell(readFileFromWorkspace("""job-dsl/test/web30.sh """ + url.values()[1]))
       }
 
       logRotator {
