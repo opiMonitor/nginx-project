@@ -36,7 +36,7 @@ for (url in card) {
 
         //Run a shell script from the workspace
         //shell(readFileFromWorkspace("""job-dsl/test/web30.sh """ + url.values()[1]))
-        shell(readFileFromWorkspace('job-dsl/test/web30.sh'))
+        shell('pwd')
       }
 
       logRotator {
