@@ -15,10 +15,10 @@ for (url in card) {
 
     // println url.values()[1]
 
-    job('test/website_' + url.values()[1]) {
+    job('website_' + url.values()[1]) {
 
       //Name of the job in Jenkins
-      displayName('test' + url.values()[1])
+      displayName('test_' + url.values()[1])
       println "job for: " + url.values()[1]
 
       triggers {
