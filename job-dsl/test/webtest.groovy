@@ -7,6 +7,8 @@ assert getConnection.responseCode == 200
 println website
 println postmanGet
 println getConnection
+println getConnection.responseCode
+println getConnection.inputStream.text
 
 
 println "end of header"
