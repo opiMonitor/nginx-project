@@ -1,6 +1,9 @@
 def website = '10.10.33.5/flask'
-println "Hello"
+println "Hello to the groovy"
 def postmanGet = new URL('http://10.10.33.5/flask/urls')
+def getConnection = postmanGet.openConnection()
+getConnection.requestMethod = 'GET'
+assert getConnection.responseCode == 200
 
 
 //def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
