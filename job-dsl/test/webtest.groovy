@@ -7,6 +7,7 @@ def getConnection = postmanGet.openConnection()
 def response_code = getConnection.responseCode
 def urls = getConnection.inputStream.text
 def card = new JsonSlurper().parse(postmanGet)
+def increment = 0
 
 println "groovy project for job creation for every single monitored webpage, stright from zabbix API http://10.10.33.5/flask/urls"
 println "response code: " + response_code
@@ -15,7 +16,7 @@ for (url in card) {
 
     // println url.values()[1]
 
-    job('website') {
+    job('test/website'+increment) {
 
       //Name of the job in Jenkins
       displayName('test_' + url.values()[1])
