@@ -2,13 +2,10 @@ def website = '10.10.33.5/flask'
 println "Hello to the groovy"
 def postmanGet = new URL('http://10.10.33.5/flask/urls')
 def getConnection = postmanGet.openConnection()
-getConnection.requestMethod = 'GET'
-assert getConnection.responseCode == 200
-println website
-println postmanGet
-println getConnection
+
 println getConnection.responseCode
-println getConnection.inputStream.text
+def urls = getConnection.inputStream.text
+println urls
 
 
 println "end of header"
