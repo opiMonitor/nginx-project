@@ -15,10 +15,11 @@ println card.getClass()
 println card[1]
 println card[1].getClass()
 println card[1].values()
+println card[1].values().getClass()
 
 
 
-
+println "-----------"
 println "end of header"
 //def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
 //echo response
