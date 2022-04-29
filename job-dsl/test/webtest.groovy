@@ -15,7 +15,7 @@ for (url in card) {
 
     // println url.values()[1]
 
-    job('test/website ' + url.values()[1]) {
+    job('test/website_' + url.values()[1]) {
 
       //Name of the job in Jenkins
       displayName('test' + url.values()[1])
@@ -34,7 +34,7 @@ for (url in card) {
 
         //Run a shell script from the workspace
         //shell(readFileFromWorkspace("""job-dsl/test/web30.sh """ + url.values()[1]))
-        shell('pwd')
+        shell(readFileFromWorkspace('job-dsl/test/web30.sh'))
       }
 
       logRotator {
