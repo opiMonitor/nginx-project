@@ -7,7 +7,6 @@ println getConnection.responseCode
 def urls = getConnection.inputStream.text
 println urls
 println urls[0]
-println urls[0]['url']
 
 
 println "end of header"
