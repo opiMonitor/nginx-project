@@ -12,6 +12,7 @@ println urls.getClass()
 def card = new JsonSlurper().parse(postmanGet)
 println card
 println card.getClass()
+println card[1]
 
 
 
