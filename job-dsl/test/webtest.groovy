@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 def website = '10.10.33.5/flask'
 println "Hello to the groovy"
 def postmanGet = new URL('http://10.10.33.5/flask/urls')
@@ -6,7 +8,8 @@ def getConnection = postmanGet.openConnection()
 println getConnection.responseCode
 def urls = getConnection.inputStream.text
 println urls
-println urls[9]
+println urls.getClass()
+
 
 
 println "end of header"
