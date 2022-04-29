@@ -15,7 +15,7 @@ for (url in card) {
 
     // println url.values()[1]
 
-    job('website_' + url.values()[1]) {
+    job('website') {
 
       //Name of the job in Jenkins
       displayName('test_' + url.values()[1])
