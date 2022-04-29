@@ -1,62 +1,14 @@
 def website = '10.10.33.5/flask'
 println "Hello"
-println(System.getProperty("java.ext.dirs"))
-echo 'System.getProperty("java.ext.dirs")'
-println "Hello2"
+def postmanGet = new URL('http://10.10.33.5/flask/urls')
+
+
 //def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
 //echo response
 
 
 
-// import groovy.sql.Sql
-// import java.sql.Driver
-//
-// def driver = Class.forName('org.postgresql.Driver').newInstance() as Driver
-//
-// def props = new Properties()
-// props.setProperty("user", "postgres")
-// props.setProperty("password", "postgres")
-//
-// def conn = driver.connect("jdbc:postgresql://postgres:5432/postgres", props)
-// def sql = new Sql(conn)
-//
-// try {
-//     sql.eachRow("select count(*) from url") {
-//         log.debug(it)
-//     }
-// } finally {
-//     sql.close()
-//     conn.close()
-// }
 
-
-// String url = "jdbc:postgresql://postgres:5432/postgres";
-// Properties props = new Properties();
-// props.setProperty("user","postgres");
-// props.setProperty("password","postgres");
-// props.setProperty("ssl","true");
-// Connection conn = DriverManager.getConnection(url, props);
-
-
-
-
-
-// postgresql://postgres:postgres@postgres:5432/postgres
-// import groovy.sql.Sql
-// def url = 'jdbc:postgresql://postgres:5432/postgres'
-// def user = 'postgres'
-// def password = 'postgres'
-// def driver = 'org.postgresql.Driver'
-// Class.forName("com.mysql.jdbc.Driver")
-// def sql = Sql.newInstance(url, user, password, driver)
-//
-// def first = sql.firstRow('SELECT url FROM url')
-// echo first
-
-
-// use 'sql' instance ...
-
-// sql.close()
 
 
 //Optional pre-send script, see further in this article for more info.
