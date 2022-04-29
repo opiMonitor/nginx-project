@@ -25,9 +25,6 @@ services:
         networks:
           - nginx-net
         volumes:
-          - type: bind
-            source: ./job-dsl/java
-            target: /usr/local/lib
           - jenkins-log:/var/log/jenkins
           - jenkins-data:/var/jenkins_home
         environment:

@@ -4,8 +4,12 @@ def postmanGet = new URL('http://10.10.33.5/flask/urls')
 def getConnection = postmanGet.openConnection()
 getConnection.requestMethod = 'GET'
 assert getConnection.responseCode == 200
+println website
+println postmanGet
+println getConnection
 
 
+println "end of header"
 //def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
 //echo response
 
