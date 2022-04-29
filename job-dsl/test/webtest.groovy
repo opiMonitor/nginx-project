@@ -4,19 +4,16 @@ def website = '10.10.33.5/flask'
 println "Hello to the groovy"
 def postmanGet = new URL('http://10.10.33.5/flask/urls')
 def getConnection = postmanGet.openConnection()
-
 println getConnection.responseCode
 def urls = getConnection.inputStream.text
-println urls
-println urls.getClass()
 def card = new JsonSlurper().parse(postmanGet)
-println card
-println card.getClass()
-println card[1]
-println card[1].getClass()
-println card[1].values()
-println card[1].values().getClass()
-println card[1].values()[1]
+def single_url = card[1].values()[1]
+println single_url
+
+for (url in card) {
+
+    println url.values()[1]
+}
 
 
 
