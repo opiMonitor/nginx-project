@@ -14,7 +14,7 @@ for (url in card) {
 
     increment = increment + 1
 
-    job('test/website'+increment) {
+    job('web monitor/website'+increment) {
 
       //Name of the job in Jenkins
       displayName('webcheck_' + url.values()[1])
