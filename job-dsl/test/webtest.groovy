@@ -9,6 +9,10 @@ println getConnection.responseCode
 def urls = getConnection.inputStream.text
 println urls
 println urls.getClass()
+def card = new JsonSlurper().parse(postmanGet)
+println card
+println card.getClass()
+
 
 
 

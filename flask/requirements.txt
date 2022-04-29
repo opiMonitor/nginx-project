@@ -10,3 +10,4 @@ itsdangerous==1.1.0
 pytz
 MarkupSafe==2.0.1
 six
+marshmallow_sqlalchemy

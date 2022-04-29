@@ -1,8 +1,11 @@
 import random
 import json
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api, Resource, fields, marshal_with
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
+
+from sqlalchemy.ext.declarative import DeclarativeMeta
 
 
 class ReverseProxied(object):
@@ -59,6 +62,15 @@ class UrlModels(db.Model):
         return f"Object UrlModels - URL: {self.url}; ID: {self.id}"
 
 
+class UrlModelsSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = UrlModels
+        load_instance = True
+
+    id = auto_field()
+    url = auto_field()
+
+
 # API
 resource_fields = {
     'id': fields.Integer,
@@ -83,7 +95,10 @@ class UrlList(Resource):
     @marshal_with(url_fields)
     def get(self):
         data = UrlModels.query.all()
-        return data
+        data2 = UrlModelsSchema(many=True)
+        dump_data = data2.dump(UrlModels.query.all())
+        return dump_data
+        # return jsonify(data2)
 
 
 api.add_resource(HostList, "/list")
@@ -94,7 +109,6 @@ api.add_resource(UrlList, "/urls")
 def get_temperature():
 
     data = HostsModels.query.all()
-
     # gdzie hosts to zmienna w template a data to zmienna tutaj
     return render_template('home.html', hosts=data)
 
