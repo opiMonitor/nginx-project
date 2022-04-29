@@ -15,11 +15,12 @@ println "response code: " + response_code
 for (url in card) {
 
     // println url.values()[1]
+    increment = increment + 1
 
     job('test/website'+increment) {
 
       //Name of the job in Jenkins
-      displayName('test_' + url.values()[1])
+      displayName('webcheck_' + url.values()[1])
       println "job for: " + url.values()[1]
 
       triggers {
