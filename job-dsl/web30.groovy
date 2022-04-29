@@ -1,62 +1,73 @@
-def website = '10.10.33.5/flask'
-def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
-echo response
+import groovy.json.JsonSlurper
 
-//Optional pre-send script, see further in this article for more info.
-//If removed, make sure to also remove the 'presendScript' variable
-//in the publisher block below.
-//def localPreSendScript = readFileFromWorkspace('<path to script>/pre_send_script.groovy_script')
+def postmanGet = new URL('http://10.10.33.5/flask/urls')
+def getConnection = postmanGet.openConnection()
+def response_code = getConnection.responseCode
+def urls = getConnection.inputStream.text
+def card = new JsonSlurper().parse(postmanGet)
+def increment = 0
 
-//Job identifier, also used for the directory
-job('website-monitor') {
+println "groovy project for job creation for every single monitored webpage, stright from zabbix API http://10.10.33.5/flask/urls"
+println "response code: " + response_code
 
-  //Name of the job in Jenkins
-  displayName('Website status of flask container')
+for (url in card) {
 
-  triggers {
-      //Run every 30 minutes
-      cron('H/30 * * * * ')
-  }
+    increment = increment + 1
 
-  steps {
-    environmentVariables {
-      env('TIMEOUT', 5)
-      env('ATTEMPTS', 5)
-    }
+    job('test/website'+increment) {
 
-    //Run a shell script from the workspace
-    shell(readFileFromWorkspace('job-dsl/web30.sh'))
-  }
+      //Name of the job in Jenkins
+      displayName('webcheck_' + url.values()[1])
+      println "job for: " + url.values()[1]
 
-  logRotator {
-    //Remove logs after two days
-    daysToKeep(2)
-  }
+      triggers {
+          //Run every 30 minutes
+          cron('H/30 * * * * ')
+      }
 
-  publishers {
-    extendedEmail {
+      steps {
+        environmentVariables {
+          env('TIMEOUT', 5)
+          env('ATTEMPTS', 5)
+          env('URL', url.values()[1])
+        }
 
-        recipientList('pawel.borowski@opi.org.pl')
-        defaultSubject('Oops')
-        defaultContent('Something broken')
-        contentType('text/html')
+        //Run a shell script from the workspace
+        shell(readFileFromWorkspace('job-dsl/test/web30.sh'))
+      }
 
-        triggers {
-                failure {
-                    subject('DSL Task website offline!')
-                    content('website '+ website + ' is offline!')
-                    sendTo {
-                        recipientList('pawel.borowski@opi.org.pl')
+      logRotator {
+        //Remove logs after two days
+        daysToKeep(2)
+      }
+
+      publishers {
+        extendedEmail {
+
+            recipientList('pawel.borowski@opi.org.pl')
+            defaultSubject('Oops')
+            defaultContent('Something broken')
+            contentType('text/html')
+
+            triggers {
+                    failure {
+                        subject('DSL Task website offline!')
+                        content('website '+ url.values()[1] + ' is offline!')
+                        sendTo {
+                            recipientList('pawel.borowski@opi.org.pl')
+                        }
+                    }
+                    fixed {
+                        subject('DSL Task website fixed!')
+                        content('website '+ url.values()[1] + ' is fixed!')
+                        sendTo {
+                            recipientList('pawel.borowski@opi.org.pl')
+                        }
                     }
                 }
-                fixed {
-                    subject('DSL Task website fixed!')
-                    content('website '+ website + ' is fixed!')
-                    sendTo {
-                        recipientList('pawel.borowski@opi.org.pl')
-                    }
-                }
-            }
+        }
+      }
     }
-  }
-}
+
+
+} // end for
