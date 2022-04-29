@@ -91,7 +91,7 @@ services:
         - nginx-net
       command: tail -F /dev/null
       restart: on-failure
-      
+
 
 
 networks:

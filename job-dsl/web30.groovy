@@ -1,4 +1,6 @@
 def website = '10.10.33.5/flask'
+def response = sh(script: 'curl http://http://10.10.33.5/flask/urls', returnStdout: true)
+echo response
 
 //Optional pre-send script, see further in this article for more info.
 //If removed, make sure to also remove the 'presendScript' variable

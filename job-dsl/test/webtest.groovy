@@ -1,33 +1,27 @@
+import groovy.json.JsonSlurper
+
 def website = '10.10.33.5/flask'
 
-import groovy.sql.Sql
-// postgresql://postgres:postgres@postgres:5432/postgres
-def url = 'jdbc:postgresql://postgres:5432/postgres'
-def user = 'postgres'
-def password = 'postgres'
-def driver = 'org.postgresql.Driver'
-def sql = Sql.newInstance(url, user, password, driver)
+def postmanGet = new URL('http://10.10.33.5/flask/urls')
+def getConnection = postmanGet.openConnection()
+def response_code = getConnection.responseCode
+def urls = getConnection.inputStream.text
+def card = new JsonSlurper().parse(postmanGet)
+def increment = 0
 
-def first = sql.firstRow('SELECT ip FROM host')
-echo first
+println "groovy project for job creation for every single monitored webpage, stright from zabbix API http://10.10.33.5/flask/urls"
+println "response code: " + response_code
 
+for (url in card) {
 
-// use 'sql' instance ...
+    // println url.values()[1]
+    increment = increment + 1
 
-sql.close()
-
-
-//Optional pre-send script, see further in this article for more info.
-//If removed, make sure to also remove the 'presendScript' variable
-//in the publisher block below.
-//def localPreSendScript = readFileFromWorkspace('<path to script>/pre_send_script.groovy_script')
-
-for ( i in 0..2 ) {
-    //Job identifier, also used for the directory
-    job('test/website-monitors-test'+i) {
+    job('test/website'+increment) {
 
       //Name of the job in Jenkins
-      displayName('Website status of multiple containers test'+i)
+      displayName('webcheck_' + url.values()[1])
+      println "job for: " + url.values()[1]
 
       triggers {
           //Run every 30 minutes
@@ -38,9 +32,11 @@ for ( i in 0..2 ) {
         environmentVariables {
           env('TIMEOUT', 5)
           env('ATTEMPTS', 5)
+          env('URL', url.values()[1])
         }
 
         //Run a shell script from the workspace
+        //shell(readFileFromWorkspace("""job-dsl/test/web30.sh """ + url.values()[1]))
         shell(readFileFromWorkspace('job-dsl/test/web30.sh'))
       }
 
@@ -60,14 +56,14 @@ for ( i in 0..2 ) {
             triggers {
                     failure {
                         subject('DSL Task website offline!')
-                        content('website '+ website + ' is offline!')
+                        content('website '+ url.values()[1] + ' is offline!')
                         sendTo {
                             recipientList('pawel.borowski@opi.org.pl')
                         }
                     }
                     fixed {
                         subject('DSL Task website fixed!')
-                        content('website '+ website + ' is fixed!')
+                        content('website '+ url.values()[1] + ' is fixed!')
                         sendTo {
                             recipientList('pawel.borowski@opi.org.pl')
                         }
@@ -77,4 +73,5 @@ for ( i in 0..2 ) {
       }
     }
 
-}
+
+} // end for
