@@ -16,7 +16,7 @@ println card[1]
 println card[1].getClass()
 println card[1].values()
 println card[1].values().getClass()
-println card[1].values()[0]
+println card[1].values()[1]
 
 
 
