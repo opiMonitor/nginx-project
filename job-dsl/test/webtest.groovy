@@ -32,11 +32,12 @@ for (url in card) {
         environmentVariables {
           env('TIMEOUT', 5)
           env('ATTEMPTS', 5)
+          env('url', url.values()[1])
         }
 
         //Run a shell script from the workspace
         //shell(readFileFromWorkspace("""job-dsl/test/web30.sh """ + url.values()[1]))
-        shell('pwd')
+        shell(readFileFromWorkspace('job-dsl/test/web30.sh'))
       }
 
       logRotator {

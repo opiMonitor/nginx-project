@@ -1,10 +1,12 @@
 #!/bin/bash
-url=$1
+url='https://10.10.33.5/flask'
 attempts=2
 timeout=2
 online=false
 
 echo "Checking status of $url."
+echo "Checking status of $timeout."
+echo ${TIMEOUT}
 
 for (( i=1; i<=$attempts; i++ ))
 do
